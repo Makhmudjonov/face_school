@@ -49,8 +49,8 @@ export const ClassesView: React.FC = () => {
         const token = localStorage.getItem('access_token');
         if (token === 'demo_mock_token') {
              setClasses([
-                { id: 1, name: '11-A', teacherName: 'Rustam Sodiqov', studentCount: 28, room: '201', school: 9 },
-                { id: 2, name: '11-B', teacherName: 'Dilshod Akbarov', studentCount: 26, room: '202', school: 9 },
+                { id: 1, name: 'A-Guruh', teacherName: 'Rustam Sodiqov', studentCount: 28, room: '201', school: 9 },
+                { id: 2, name: 'B-Guruh', teacherName: 'Dilshod Akbarov', studentCount: 26, room: '202', school: 9 },
              ]);
              setIsLoading(false);
              return;
@@ -165,7 +165,7 @@ export const ClassesView: React.FC = () => {
   };
 
   const handleDelete = async (id: number) => {
-      if (!confirm("Haqiqatan ham bu sinfni o'chirmoqchimisiz?")) return;
+      if (!confirm("Haqiqatan ham bu guruhni o'chirmoqchimisiz?")) return;
       try {
           const token = localStorage.getItem('access_token');
           const response = await fetch(`https://hik-test.tashmeduni.uz/api/v1/settings/classroom/${id}/delete/`, {
@@ -182,15 +182,15 @@ export const ClassesView: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Sinflar</h2>
-          <p className="text-slate-500 dark:text-slate-400">Maktab sinflari ro'yxati</p>
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Guruhlar</h2>
+          <p className="text-slate-500 dark:text-slate-400">Tashkilot guruhlari ro'yxati</p>
         </div>
         <button 
             onClick={() => handleOpenModal()}
             className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
-          Sinf qo'shish
+          Guruh qo'shish
         </button>
       </div>
 
@@ -217,10 +217,10 @@ export const ClassesView: React.FC = () => {
             <table className="w-full text-left border-collapse">
                 <thead>
                 <tr className="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sinf Nomi</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Maktab</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sinf Rahbari</th>
-                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">O'quvchilar</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Guruh Nomi</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Filial</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Mas'ul</th>
+                    <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">Foydalanuvchilar</th>
                     <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Amallar</th>
                 </tr>
                 </thead>
@@ -279,14 +279,14 @@ export const ClassesView: React.FC = () => {
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               {error && <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-sm">{error}</div>}
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Maktab</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Filial</label>
                 <select required value={formData.school} onChange={(e) => setFormData({ ...formData, school: e.target.value })} className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none">
                     <option value="">Tanlang...</option>
                     {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Sinf Nomi</label>
+                <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">Guruh Nomi</label>
                 <input type="text" required value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2.5 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none" />
               </div>
               <div className="pt-4 flex gap-3">

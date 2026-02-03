@@ -53,6 +53,20 @@ export interface EventLog {
   leaved_device: number | null;
 }
 
+export interface AttendanceLog {
+  employee_id?: number;
+  pupil_id?: number;
+  employee_name?: string;
+  pupil_name?: string;
+  log_date: string;
+  first_entry: string | null;
+  last_exit: string | null;
+  status: string | null;
+  entered_face_mood: string | null;
+  total_logs: number;
+  worked_hours: string | number | null;
+}
+
 export interface Device {
   id: number | string;
   name: string;

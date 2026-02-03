@@ -69,7 +69,7 @@ const App: React.FC = () => {
               date_of_birth: null,
               age: null,
               groupId: null,
-              school: 'Toshkent sh. 1-maktab',
+              school: 'Bosh Ofis',
               image: null,
               image_url: null,
               startDate: null,
@@ -119,12 +119,12 @@ const App: React.FC = () => {
   const getPageTitle = (view: string) => {
     switch (view) {
         case 'dashboard': return 'Bosh sahifa';
-        case 'student-monitoring': return 'O\'quvchilar Nazorati';
+        case 'student-monitoring': return 'Foydalanuvchilar Nazorati';
         case 'settings': return 'Sozlamalar';
-        case 'buildings': return 'Binolar va Qurilmalar';
+        case 'buildings': return 'Tuzilma va Qurilmalar';
         case 'devices': return 'Qurilmalar';
-        case 'students': return 'O\'quvchilar Ro\'yxati';
-        case 'classes': return 'Sinflar';
+        case 'students': return 'Foydalanuvchilar Ro\'yxati';
+        case 'classes': return 'Guruhlar';
         case 'employees': return 'Xodimlar Ro\'yxati';
         case 'departments': return 'Bo\'limlar';
         case 'employee-monitoring': return 'Xodimlar Nazorati';

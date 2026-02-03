@@ -52,8 +52,8 @@ export const DevicesView: React.FC = () => {
       const token = localStorage.getItem('access_token');
       if (token === 'demo_mock_token') {
           setSchools([
-             { id: 1, name: '10-maktab (Asosiy)', code: 'SCH-10' },
-             { id: 2, name: '10-maktab (Sport zal)', code: 'SCH-10-GYM' }
+             { id: 1, name: 'Bosh Filial', code: 'SCH-10' },
+             { id: 2, name: 'Yordamchi bino', code: 'SCH-10-GYM' }
           ]);
           return;
       }
@@ -295,7 +295,7 @@ export const DevicesView: React.FC = () => {
 
                   <div>
                       <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1.5">
-                        Bino (Maktab) <span className="text-red-500">*</span>
+                        Bino (Filial) <span className="text-red-500">*</span>
                       </label>
                       <div className="relative">
                           <select

@@ -72,11 +72,11 @@ export const EmployeesView: React.FC = () => {
             employee_id: 'E001', 
             phone: '998901112233', 
             image: null, 
-            school_name: '142-sonli maktab', 
+            school_name: 'Bosh Filial', 
             department_name: 'Ma\'muriyat' 
           }
         ]);
-        setSchools([{ id: 9, name: '142-sonli maktab' }]);
+        setSchools([{ id: 9, name: 'Bosh Filial' }]);
         setDepartments([{ id: 1, name: 'Ma\'muriyat', employeeCount: 5, school: 9 }]);
         return;
       }
@@ -120,7 +120,7 @@ export const EmployeesView: React.FC = () => {
           lastName: "Akbarov",
           phone: "998901112233",
           gender: "1",
-          school: { name: "142-sonli maktab" },
+          school: { name: "Bosh Filial" },
           department: { name: "Ma'muriyat" },
           startDate: new Date().toISOString(),
           endDate: new Date().toISOString()
@@ -253,7 +253,7 @@ export const EmployeesView: React.FC = () => {
                 <tr className="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Xodim</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Bo'lim</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Maktab</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Filial</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Amallar</th>
                 </tr>
               </thead>
@@ -282,7 +282,7 @@ export const EmployeesView: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
-                      {emp.school_name || 'Noma\'lum maktab'}
+                      {emp.school_name || 'Noma\'lum filial'}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button className="p-2 text-slate-400 hover:text-primary-600 transition-colors">
@@ -335,7 +335,7 @@ export const EmployeesView: React.FC = () => {
                   <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
                     <div className="space-y-1">
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                        <Building size={14} /> Maktab
+                        <Building size={14} /> Filial
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                         {selectedEmployeeDetail.school?.name || selectedEmployeeDetail.school_name || '-'}
@@ -441,7 +441,7 @@ export const EmployeesView: React.FC = () => {
                   <input type="text" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all" placeholder="998" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Maktab *</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Filial *</label>
                   <select required value={formData.school_id} onChange={e => setFormData({...formData, school_id: e.target.value, department_id: ''})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all">
                     <option value="">Tanlang...</option>
                     {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}

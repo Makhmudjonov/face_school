@@ -1,5 +1,5 @@
 {
-  "name": "MaktabDavomat",
-  "description": "Maktab uchun zamonaviy elektron davomat va boshqaruv tizimi dashboardi.",
+  "name": "ElektronNazorat",
+  "description": "Tashkilotlar uchun zamonaviy elektron nazorat va boshqaruv tizimi dashboardi.",
   "requestFramePermissions": []
 }

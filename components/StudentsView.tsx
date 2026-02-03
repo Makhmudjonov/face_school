@@ -72,12 +72,12 @@ export const StudentsView: React.FC = () => {
             employee_id: 'P001', 
             phone: '998901234567', 
             image: null, 
-            school_name: '142-sonli maktab', 
-            classroom_name: '15-a sinf' 
+            school_name: 'Bosh Filial', 
+            classroom_name: 'A-Guruh' 
           }
         ]);
-        setSchools([{ id: 9, name: '142-sonli maktab' }]);
-        setClassrooms([{ id: 2, name: '15-a sinf', studentCount: 20, school: 9 }]);
+        setSchools([{ id: 9, name: 'Bosh Filial' }]);
+        setClassrooms([{ id: 2, name: 'A-Guruh', studentCount: 20, school: 9 }]);
         return;
       }
 
@@ -120,8 +120,8 @@ export const StudentsView: React.FC = () => {
           lastName: "Rahimov",
           phone: "998901234567",
           gender: "1",
-          school: { name: "142-sonli maktab" },
-          classroom: { name: "15-a sinf" },
+          school: { name: "Bosh Filial" },
+          classroom: { name: "A-Guruh" },
           startDate: new Date().toISOString(),
           endDate: new Date().toISOString()
         });
@@ -156,7 +156,7 @@ export const StudentsView: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!picture) {
-      setError("O'quvchi rasmi yuklanishi shart");
+      setError("Rasm yuklanishi shart");
       return;
     }
 
@@ -212,8 +212,8 @@ export const StudentsView: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-white">O'quvchilar</h2>
-          <p className="text-slate-500 dark:text-slate-400">Tizimdagi barcha o'quvchilar ro'yxati</p>
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Foydalanuvchilar</h2>
+          <p className="text-slate-500 dark:text-slate-400">Tizimdagi barcha foydalanuvchilar ro'yxati</p>
         </div>
         <button 
           onClick={() => {
@@ -225,7 +225,7 @@ export const StudentsView: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
-          O'quvchi qo'shish
+          Foydalanuvchi qo'shish
         </button>
       </div>
 
@@ -250,9 +250,9 @@ export const StudentsView: React.FC = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">O'quvchi</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sinf</th>
-                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Maktab</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">F.I.SH</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Guruh</th>
+                  <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Filial</th>
                   <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-right">Amallar</th>
                 </tr>
               </thead>
@@ -276,11 +276,11 @@ export const StudentsView: React.FC = () => {
                     </td>
                     <td className="px-6 py-4">
                       <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium border border-blue-100 dark:border-blue-800">
-                        {student.classroom_name || 'Noma\'lum sinf'}
+                        {student.classroom_name || 'Noma\'lum guruh'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-600 dark:text-slate-300">
-                      {student.school_name || 'Noma\'lum maktab'}
+                      {student.school_name || 'Noma\'lum filial'}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <button className="p-2 text-slate-400 hover:text-primary-600 transition-colors">
@@ -300,7 +300,7 @@ export const StudentsView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/50">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white">O'quvchi ma'lumotlari</h3>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white">Foydalanuvchi ma'lumotlari</h3>
               <button onClick={() => setIsDetailModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
             </div>
 
@@ -333,7 +333,7 @@ export const StudentsView: React.FC = () => {
                   <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8">
                     <div className="space-y-1">
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                        <Building size={14} /> Maktab
+                        <Building size={14} /> Filial
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                         {selectedStudentDetail.school?.name || selectedStudentDetail.school_name || '-'}
@@ -341,7 +341,7 @@ export const StudentsView: React.FC = () => {
                     </div>
                     <div className="space-y-1">
                       <p className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
-                        <GraduationCap size={14} /> Sinf
+                        <GraduationCap size={14} /> Guruh
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
                         {selectedStudentDetail.classroom?.name || selectedStudentDetail.classroom_name || '-'}
@@ -401,7 +401,7 @@ export const StudentsView: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
           <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-2xl my-8 overflow-hidden animate-in fade-in zoom-in duration-200">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/50">
-              <h3 className="text-lg font-bold text-slate-800 dark:text-white">Yangi o'quvchi qo'shish</h3>
+              <h3 className="text-lg font-bold text-slate-800 dark:text-white">Yangi foydalanuvchi qo'shish</h3>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600"><X className="w-5 h-5" /></button>
             </div>
             
@@ -418,7 +418,7 @@ export const StudentsView: React.FC = () => {
                     <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
                   </label>
                 </div>
-                <p className="text-xs text-slate-500 mt-2 font-medium">O'quvchi rasmi yuklang (majburiy)</p>
+                <p className="text-xs text-slate-500 mt-2 font-medium">Rasm yuklang (majburiy)</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -431,7 +431,7 @@ export const StudentsView: React.FC = () => {
                   <input type="text" required value={formData.lastName} onChange={e => setFormData({...formData, lastName: e.target.value})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">O'quvchi ID *</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">ID *</label>
                   <input type="text" required value={formData.employee_id} onChange={e => setFormData({...formData, employee_id: e.target.value})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all" placeholder="P0001" />
                 </div>
                 <div>
@@ -439,14 +439,14 @@ export const StudentsView: React.FC = () => {
                   <input type="text" required value={formData.phone} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all" placeholder="998" />
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Maktab *</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Filial *</label>
                   <select required value={formData.school_id} onChange={e => setFormData({...formData, school_id: e.target.value, classroom_id: ''})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all">
                     <option value="">Tanlang...</option>
                     {schools.map(s => <option key={s.id} value={s.id}>{s.name}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Sinf *</label>
+                  <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-1">Guruh *</label>
                   <select required value={formData.classroom_id} onChange={e => setFormData({...formData, classroom_id: e.target.value})} className="w-full px-4 py-2 border border-slate-200 dark:border-slate-600 rounded-xl bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none focus:ring-2 focus:ring-primary-500 transition-all">
                     <option value="">Tanlang...</option>
                     {classrooms.filter(c => !formData.school_id || c.school === parseInt(formData.school_id)).map(c => <option key={c.id} value={c.id}>{c.name}</option>)}

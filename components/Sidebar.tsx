@@ -31,12 +31,12 @@ const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Bosh sahifa', icon: LayoutDashboard, view: 'dashboard' },
   { 
     id: 'students-group', 
-    label: "O'quvchilar", 
+    label: "Foydalanuvchilar", 
     icon: GraduationCap, 
     children: [
-      { id: 'students', label: "O'quvchilar ro'yxati", icon: Users, view: 'students' },
-      { id: 'classes', label: "Sinflar", icon: BookOpen, view: 'classes' },
-      { id: 'student-monitoring', label: "Davomat nazorati", icon: ClipboardCheck, view: 'student-monitoring' }
+      { id: 'students', label: "Ro'yxat", icon: Users, view: 'students' },
+      { id: 'classes', label: "Guruhlar", icon: BookOpen, view: 'classes' },
+      { id: 'student-monitoring', label: "Nazorat", icon: ClipboardCheck, view: 'student-monitoring' }
     ]
   },
   { 
@@ -44,14 +44,14 @@ const navItems: NavItem[] = [
     label: "Xodimlar", 
     icon: UserCheck, 
     children: [
-      { id: 'employees', label: "Xodimlar ro'yxati", icon: List, view: 'employees' },
+      { id: 'employees', label: "Ro'yxat", icon: List, view: 'employees' },
       { id: 'departments', label: "Bo'limlar", icon: Briefcase, view: 'departments' },
-      { id: 'employee-monitoring', label: "Davomat nazorati", icon: ClipboardCheck, view: 'employee-monitoring' }
+      { id: 'employee-monitoring', label: "Nazorat", icon: ClipboardCheck, view: 'employee-monitoring' }
     ]
   },
   { id: 'access-control', label: 'Eshiklar nazorati', icon: Key, view: 'access-control' },
   { id: 'logs', label: 'Tizim loglari', icon: History, view: 'logs' },
-  { id: 'buildings', label: 'Binolar va Qurilmalar', icon: Building2, view: 'buildings' },
+  { id: 'buildings', label: 'Tuzilma va Qurilmalar', icon: Building2, view: 'buildings' },
   { id: 'devices', label: 'Qurilmalar', icon: Settings, view: 'devices' }, 
   { id: 'settings', label: 'Sozlamalar', icon: Settings, view: 'settings' },
 ];

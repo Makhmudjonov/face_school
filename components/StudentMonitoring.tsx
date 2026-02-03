@@ -1,211 +1,265 @@
 
-import React, { useState } from 'react';
-import { Search, Filter, CheckCircle, XCircle, Clock, Smile, Meh, Frown, LogIn, LogOut } from 'lucide-react';
-import { Student, AttendanceStatus, Mood } from '../types';
-
-// Mock Data with Times and Moods
-// Fix: id must be a number as defined in Person interface
-const MOCK_STUDENTS: Student[] = [
-  { id: 1, firstName: 'Aziz', lastName: 'Rahimov', class: '11-A', parentPhone: '+998901234567', attendanceRate: 98, checkIn: '07:45', checkOut: '13:15', mood: Mood.HAPPY } as any,
-  { id: 2, firstName: 'Malika', lastName: 'Karimova', class: '11-A', parentPhone: '+998901234568', attendanceRate: 92, checkIn: '07:55', mood: Mood.NEUTRAL } as any,
-  { id: 3, firstName: 'Jamshid', lastName: 'Sobirov', class: '11-B', parentPhone: '+998901234569', attendanceRate: 85, checkIn: '08:15', mood: Mood.TIRED } as any,
-  { id: 4, firstName: 'Sevara', lastName: 'Tursunova', class: '10-A', parentPhone: '+998901234570', attendanceRate: 95, checkIn: '07:50', checkOut: '13:10', mood: Mood.HAPPY } as any,
-  { id: 5, firstName: 'Bobur', lastName: 'Aliyev', class: '10-A', parentPhone: '+998901234571', attendanceRate: 100, checkIn: '07:30', mood: Mood.HAPPY } as any,
-];
+import React, { useState, useEffect } from 'react';
+import { Search, Filter, Clock, Smile, Meh, Frown, LogIn, LogOut, Loader2, Calendar, RefreshCw, ChevronLeft, ChevronRight, User } from 'lucide-react';
+import { AttendanceLog } from '../types';
 
 export const StudentMonitoring: React.FC = () => {
+  const [logs, setLogs] = useState<AttendanceLog[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [pageSize] = useState(20);
+  const [totalElements, setTotalElements] = useState(0);
+
+  // Filter State
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedClass, setSelectedClass] = useState('All');
-  const [selectedMood, setSelectedMood] = useState('All');
-  const [attendanceState, setAttendanceState] = useState<Record<string, AttendanceStatus>>({});
+  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
 
-  const handleStatusChange = (studentId: string, status: AttendanceStatus) => {
-    setAttendanceState(prev => ({ ...prev, [studentId]: status }));
-  };
+  useEffect(() => {
+    fetchAttendance();
+  }, [page, date]);
 
-  const filteredStudents = MOCK_STUDENTS.filter(student => {
-    const matchesSearch = (student.firstName + ' ' + student.lastName).toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesClass = selectedClass === 'All' || student.class === selectedClass;
-    const matchesMood = selectedMood === 'All' || student.mood === selectedMood;
-    return matchesSearch && matchesClass && matchesMood;
-  });
+  const fetchAttendance = async () => {
+    setIsLoading(true);
+    const token = localStorage.getItem('access_token');
+    
+    const query = new URLSearchParams();
+    query.append('page', page.toString());
+    query.append('page_size', pageSize.toString());
+    query.append('log_date', date);
+    if (searchTerm) query.append('search', searchTerm);
 
-  const getMoodIcon = (mood?: Mood) => {
-    switch (mood) {
-      case Mood.HAPPY: return <Smile className="w-5 h-5 text-green-500" />;
-      case Mood.NEUTRAL: return <Meh className="w-5 h-5 text-yellow-500" />;
-      case Mood.TIRED: 
-      case Mood.SAD: return <Frown className="w-5 h-5 text-orange-500" />;
-      case Mood.ANGRY: return <Frown className="w-5 h-5 text-red-500" />;
-      default: return <Meh className="w-5 h-5 text-slate-300" />;
+    try {
+      if (token === 'demo_mock_token') {
+        setTimeout(() => {
+            setLogs([
+                {
+                  "employee_id": 101, // Mocking pupil as generic employee struct
+                  "employee_name": "Aziz Rahimov",
+                  "log_date": date,
+                  "first_entry": `${date}T07:45:36+05:00`,
+                  "last_exit": `${date}T13:15:00+05:00`,
+                  "status": "ontime",
+                  "entered_face_mood": "xursand",
+                  "total_logs": 2,
+                  "worked_hours": 5.5
+                },
+                {
+                  "employee_id": 102,
+                  "employee_name": "Malika Karimova",
+                  "log_date": date,
+                  "first_entry": `${date}T08:10:00+05:00`,
+                  "last_exit": null,
+                  "status": "late",
+                  "entered_face_mood": "oddiy",
+                  "total_logs": 1,
+                  "worked_hours": 0
+                }
+            ]);
+            setTotalElements(2);
+            setIsLoading(false);
+        }, 600);
+        return;
+      }
+
+      const response = await fetch(`https://hik-test.tashmeduni.uz/api/v1/events/pupils/attendance/list/?${query.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'accept': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setLogs(data.data || []);
+        setTotalElements(data.total_elements || 0);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getMoodLabel = (mood?: Mood) => {
-    switch (mood) {
-        case Mood.HAPPY: return 'Xursand';
-        case Mood.NEUTRAL: return 'Oddiy';
-        case Mood.TIRED: return 'Charchagan';
-        case Mood.SAD: return 'Xafa';
-        case Mood.ANGRY: return 'Jahldor';
-        default: return 'Noma\'lum';
-    }
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setPage(1);
+    fetchAttendance();
+  };
+
+  const formatTime = (isoString: string | null) => {
+      if (!isoString) return '-';
+      return new Date(isoString).toLocaleTimeString('uz-UZ', { hour: '2-digit', minute: '2-digit', hour12: false });
+  };
+
+  const getMoodIcon = (mood: string | null) => {
+    if (!mood) return <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-400"><User size={16} /></div>;
+    const m = mood.toLowerCase();
+    if (m.includes('happy') || m.includes('xursand')) return <Smile className="w-5 h-5 text-emerald-500" />;
+    if (m.includes('neutral') || m.includes('oddiy')) return <Meh className="w-5 h-5 text-amber-500" />;
+    if (m.includes('sad') || m.includes('charchagan') || m.includes('tired')) return <Frown className="w-5 h-5 text-red-500" />;
+    return <Meh className="w-5 h-5 text-slate-400" />;
+  };
+
+  const getStatusBadge = (status: string | null) => {
+      if (!status) return <span className="text-slate-400">-</span>;
+      const s = status.toLowerCase();
+      if (s === 'late') return <span className="px-2 py-0.5 rounded text-xs font-bold bg-amber-100 text-amber-700 border border-amber-200">Kechikkan</span>;
+      if (s === 'ontime' || s === 'present') return <span className="px-2 py-0.5 rounded text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200">Vaqtida</span>;
+      if (s === 'absent') return <span className="px-2 py-0.5 rounded text-xs font-bold bg-red-100 text-red-700 border border-red-200">Kelmadi</span>;
+      return <span className="px-2 py-0.5 rounded text-xs font-bold bg-slate-100 text-slate-600 border border-slate-200 capitalize">{s}</span>;
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in pb-10">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-white">O'quvchilar Nazorati</h2>
-          <p className="text-slate-500 dark:text-slate-400">Real vaqt rejimida davomat va holat tahlili</p>
+          <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Foydalanuvchilar Nazorati</h2>
+          <p className="text-slate-500 dark:text-slate-400">Kunlik kirish-chiqish va davomat hisoboti</p>
         </div>
-        <div className="flex gap-2">
-            <button className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors shadow-sm text-sm font-medium">
-                Hisobotni yuklash
+        <button 
+            onClick={fetchAttendance}
+            className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-xl hover:bg-slate-50 transition-all font-semibold shadow-sm"
+        >
+            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+            Yangilash
+        </button>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700">
+        <form onSubmit={handleSearch} className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input 
+                    type="text" 
+                    placeholder="F.I.SH bo'yicha qidiruv..." 
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white placeholder:text-slate-400"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+            <div className="relative w-full md:w-48">
+                <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+                <input 
+                    type="date" 
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-sm outline-none focus:ring-2 focus:ring-primary-500 text-slate-900 dark:text-white"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                />
+            </div>
+            <button 
+                type="submit"
+                className="px-6 py-2.5 bg-primary-600 text-white font-bold rounded-xl hover:bg-primary-700 transition-colors shadow-lg shadow-primary-500/20"
+            >
+                Qidirish
             </button>
-        </div>
+        </form>
       </div>
 
-      {/* Filters */}
-      <div className="bg-white dark:bg-slate-800 p-4 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-          <input 
-            type="text" 
-            placeholder="O'quvchi ismini qidiring..." 
-            className="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white dark:bg-slate-900 text-slate-900 dark:text-white placeholder:text-slate-400"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className="relative w-full sm:w-48">
-            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <select 
-                className="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none bg-white dark:bg-slate-900 text-slate-900 dark:text-white cursor-pointer"
-                value={selectedClass}
-                onChange={(e) => setSelectedClass(e.target.value)}
-            >
-                <option value="All">Barcha sinflar</option>
-                <option value="11-A">11-A</option>
-                <option value="11-B">11-B</option>
-                <option value="10-A">10-A</option>
-            </select>
-        </div>
-        <div className="relative w-full sm:w-48">
-            <Smile className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <select 
-                className="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-slate-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 appearance-none bg-white dark:bg-slate-900 text-slate-900 dark:text-white cursor-pointer"
-                value={selectedMood}
-                onChange={(e) => setSelectedMood(e.target.value)}
-            >
-                <option value="All">Barcha holatlar</option>
-                <option value={Mood.HAPPY}>Xursand</option>
-                <option value={Mood.NEUTRAL}>Oddiy</option>
-                <option value={Mood.TIRED}>Charchagan</option>
-                <option value={Mood.SAD}>Xafa</option>
-                <option value={Mood.ANGRY}>Jahldor</option>
-            </select>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-200 dark:border-slate-700">
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">O'quvchi</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Sinf</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              <tr className="bg-slate-50 dark:bg-slate-700/50 border-b border-slate-100 dark:border-slate-700">
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">Foydalanuvchi</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Status</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
                     <div className="flex items-center gap-1">
-                        <LogIn className="w-3.5 h-3.5" /> Kelish Vaqti
+                        <LogIn className="w-3.5 h-3.5" /> Kelish
                     </div>
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-                    <div className="flex items-center gap-1">
-                        <LogOut className="w-3.5 h-3.5" /> Ketish Vaqti
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest">
+                     <div className="flex items-center gap-1">
+                        <LogOut className="w-3.5 h-3.5" /> Ketish
                     </div>
                 </th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">Yuz Holati</th>
-                <th className="px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider text-center">Status</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Qurilmalar</th>
+                <th className="px-6 py-4 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-widest text-center">Kayfiyat</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
-              {filteredStudents.map((student) => (
-                <tr key={student.id} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
+              {isLoading ? (
+                  <tr>
+                    <td colSpan={6} className="py-20 text-center">
+                        <Loader2 className="w-10 h-10 animate-spin text-primary-500 mx-auto" />
+                        <p className="mt-2 text-sm text-slate-500">Yuklanmoqda...</p>
+                    </td>
+                  </tr>
+              ) : logs.length > 0 ? logs.map((log, index) => (
+                <tr key={`${log.employee_id || log.pupil_id}-${index}`} className="hover:bg-slate-50 dark:hover:bg-slate-700/30 transition-colors">
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 overflow-hidden border border-slate-200 dark:border-slate-600">
-                        {/* Placeholder for actual face image captured by camera */}
-                        {/* Fix: use optional chaining for names just in case */}
-                        <span className="text-xs font-bold">{student.firstName?.[0]}{student.lastName?.[0]}</span>
+                      <div className="w-10 h-10 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xs border border-blue-100 dark:border-blue-800">
+                        {(log.employee_name || log.pupil_name || '?').charAt(0)}
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-slate-900 dark:text-slate-200">{student.firstName} {student.lastName}</p>
-                        {/* Fix: convert id to string before calling padStart */}
-                        <p className="text-xs text-slate-500 dark:text-slate-400">ID: #{student.id.toString().padStart(4, '0')}</p>
+                        <p className="text-sm font-bold text-slate-800 dark:text-slate-200">{log.employee_name || log.pupil_name}</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">ID: {log.employee_id || log.pupil_id}</p>
                       </div>
                     </div>
                   </td>
+                  <td className="px-6 py-4 text-center">
+                    {getStatusBadge(log.status)}
+                  </td>
                   <td className="px-6 py-4">
-                    <span className="px-2.5 py-0.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-medium border border-slate-200 dark:border-slate-600">
-                      {student.class}
+                    <span className="font-mono text-sm font-bold text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 px-2 py-1 rounded">
+                        {formatTime(log.first_entry)}
                     </span>
                   </td>
-                  <td className="px-6 py-4">
-                    {student.checkIn ? (
-                        <span className={`font-mono text-sm ${student.checkIn > '08:00' ? 'text-red-600 bg-red-50 dark:bg-red-900/20 px-2 py-0.5 rounded' : 'text-green-700 bg-green-50 dark:bg-green-900/20 px-2 py-0.5 rounded'}`}>
-                            {student.checkIn}
-                        </span>
-                    ) : (
-                        <span className="text-slate-400 text-sm">-</span>
-                    )}
-                  </td>
-                  <td className="px-6 py-4">
-                     <span className="font-mono text-sm text-slate-600 dark:text-slate-300">
-                        {student.checkOut || '-'}
+                   <td className="px-6 py-4">
+                     <span className="font-mono text-sm font-bold text-amber-700 dark:text-amber-400 bg-amber-50 dark:bg-amber-900/20 px-2 py-1 rounded">
+                        {formatTime(log.last_exit)}
                      </span>
                   </td>
-                  <td className="px-6 py-4">
-                     <div className="flex items-center justify-center gap-2 px-3 py-1 bg-slate-50 dark:bg-slate-700/50 rounded-lg border border-slate-100 dark:border-slate-700 w-fit mx-auto">
-                        {getMoodIcon(student.mood)}
-                        <span className="text-xs font-medium text-slate-600 dark:text-slate-300">{getMoodLabel(student.mood)}</span>
+                  <td className="px-6 py-4 text-center">
+                     <div className="flex flex-col items-center">
+                        <span className="font-bold text-slate-700 dark:text-slate-300">{log.total_logs} ta log</span>
+                        <span className="text-[10px] text-slate-400">Jami</span>
                      </div>
                   </td>
                   <td className="px-6 py-4">
-                    <div className="flex items-center justify-center gap-2">
-                        <button 
-                            onClick={() => handleStatusChange(student.id.toString(), AttendanceStatus.PRESENT)}
-                            className={`p-1.5 rounded-md transition-all ${attendanceState[student.id.toString()] === AttendanceStatus.PRESENT || (!attendanceState[student.id.toString()] && student.checkIn) ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : 'text-slate-300 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-green-500'}`}
-                            title="Bor"
-                        >
-                            <CheckCircle className="w-5 h-5" />
-                        </button>
-                        <button 
-                            onClick={() => handleStatusChange(student.id.toString(), AttendanceStatus.LATE)}
-                            className={`p-1.5 rounded-md transition-all ${attendanceState[student.id.toString()] === AttendanceStatus.LATE || (!attendanceState[student.id.toString()] && student.checkIn && student.checkIn > '08:00') ? 'bg-yellow-100 text-yellow-600 dark:bg-yellow-900/30 dark:text-yellow-400' : 'text-slate-300 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-yellow-500'}`}
-                            title="Kechikdi"
-                        >
-                            <Clock className="w-5 h-5" />
-                        </button>
-                        <button 
-                            onClick={() => handleStatusChange(student.id.toString(), AttendanceStatus.ABSENT)}
-                            className={`p-1.5 rounded-md transition-all ${attendanceState[student.id.toString()] === AttendanceStatus.ABSENT ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400' : 'text-slate-300 dark:text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-red-500'}`}
-                            title="Yo'q"
-                        >
-                            <XCircle className="w-5 h-5" />
-                        </button>
-                    </div>
+                     <div className="flex justify-center" title={log.entered_face_mood || ''}>
+                        {getMoodIcon(log.entered_face_mood)}
+                     </div>
                   </td>
                 </tr>
-              ))}
+              )) : (
+                  <tr>
+                    <td colSpan={6} className="py-20 text-center text-slate-500">
+                        Ma'lumot topilmadi
+                    </td>
+                  </tr>
+              )}
             </tbody>
           </table>
-          {filteredStudents.length === 0 && (
-              <div className="p-8 text-center text-slate-500 dark:text-slate-400">
-                  Hech qanday o'quvchi topilmadi.
+        </div>
+
+        {/* Pagination */}
+        <div className="px-6 py-4 bg-slate-50 dark:bg-slate-900/50 border-t border-slate-100 dark:border-slate-700 flex flex-col sm:flex-row items-center justify-between gap-4">
+           <div className="text-sm text-slate-500 dark:text-slate-400">
+              <span className="font-bold text-slate-900 dark:text-white">{totalElements}</span> tadan <span className="font-bold text-slate-900 dark:text-white">{(page - 1) * pageSize + 1}</span> - <span className="font-bold text-slate-900 dark:text-white">{Math.min(page * pageSize, totalElements)}</span> ko'rsatilmoqda
+           </div>
+           
+           <div className="flex items-center gap-2">
+              <button 
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+                className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              >
+                <ChevronLeft size={18} />
+              </button>
+              
+              <div className="px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-bold text-slate-700 dark:text-slate-300">
+                Sahifa {page}
               </div>
-          )}
+
+              <button 
+                onClick={() => setPage(p => p + 1)}
+                disabled={page * pageSize >= totalElements}
+                className="p-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 disabled:opacity-50 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
+              >
+                <ChevronRight size={18} />
+              </button>
+           </div>
         </div>
       </div>
     </div>
