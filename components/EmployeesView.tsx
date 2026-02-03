@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, UserCheck, X, Save, Loader2, Upload, Camera, Briefcase, MoreVertical, Phone, Calendar, Building, Info, User } from 'lucide-react';
 import { Person, School, Department } from '../types';
@@ -11,10 +12,15 @@ const flattenSchools = (nodes: School[]): School[] => {
   return flat;
 };
 
-const formatDate = (dateStr: string | null) => {
+const formatDateUz = (dateStr: string | null) => {
   if (!dateStr) return '-';
   try {
-    return new Date(dateStr).toLocaleDateString('uz-UZ');
+    const date = new Date(dateStr);
+    const monthNames = [
+      "yanvar", "fevral", "mart", "aprel", "may", "iyun",
+      "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"
+    ];
+    return `${date.getDate()}-${monthNames[date.getMonth()]} ${date.getFullYear()}-yil`;
   } catch {
     return dateStr;
   }
@@ -208,7 +214,7 @@ export const EmployeesView: React.FC = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="text-2xl font-bold text-slate-800 dark:text-white">Xodimlar</h2>
-          <p className="text-slate-500 dark:text-slate-400">Maktab o'qituvchilari va ma'muriyat</p>
+          <p className="text-slate-500 dark:text-slate-400">Tashkilot o'qituvchilari va ma'muriyat</p>
         </div>
         <button 
           onClick={() => {
@@ -364,7 +370,7 @@ export const EmployeesView: React.FC = () => {
                         <Calendar size={14} /> Ish boshlagan sana
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        {formatDate(selectedEmployeeDetail.startDate)}
+                        {formatDateUz(selectedEmployeeDetail.startDate)}
                       </p>
                     </div>
                     <div className="space-y-1">
@@ -372,7 +378,7 @@ export const EmployeesView: React.FC = () => {
                         <Calendar size={14} /> Shartnoma tugash sanasi
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        {formatDate(selectedEmployeeDetail.endDate)}
+                        {formatDateUz(selectedEmployeeDetail.endDate)}
                       </p>
                     </div>
                   </div>

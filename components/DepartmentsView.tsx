@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, Edit, Trash2, Users, Briefcase, X, Save, Loader2, Building2 } from 'lucide-react';
 import { Department, School } from '../types';

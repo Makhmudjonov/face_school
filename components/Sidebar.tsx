@@ -15,7 +15,8 @@ import {
   BookOpen,
   Briefcase,
   Key,
-  History
+  History,
+  ShieldCheck
 } from 'lucide-react';
 import { NavItem } from '../types';
 
@@ -88,11 +89,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, i
       >
         <div className="flex items-center gap-3 px-6 h-16 border-b border-slate-800 shrink-0">
           <div className="p-1.5 bg-primary-600 rounded-lg shadow-lg shadow-primary-900/50">
-            <School className="w-6 h-6 text-white" />
+            <ShieldCheck className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-lg font-bold tracking-tight">EduControl</h1>
-            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Maktab Tizimi</p>
+            <h1 className="text-lg font-bold tracking-tight">Nazorat Tizimi</h1>
+            <p className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Boshqaruv Paneli</p>
           </div>
         </div>
 
@@ -175,7 +176,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, i
         </nav>
 
         <div className="p-4 border-t border-slate-800 text-center">
-            <p className="text-[10px] text-slate-600">v1.0.0 Beta</p>
+            <p className="text-[10px] text-slate-600">v1.2.0</p>
         </div>
       </aside>
     </>

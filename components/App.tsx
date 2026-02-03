@@ -12,6 +12,8 @@ import { ClassesView } from './components/ClassesView';
 import { EmployeesView } from './components/EmployeesView';
 import { DepartmentsView } from './components/DepartmentsView';
 import { EmployeeMonitoring } from './components/EmployeeMonitoring';
+import { AccessControlView } from './components/AccessControlView';
+import { LogsView } from './components/LogsView';
 import { DevicesView } from './components/DevicesView';
 import { UserProfile } from './types';
 
@@ -21,7 +23,6 @@ const App: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [user, setUser] = useState<UserProfile | null>(null);
   
-  // Dark Mode State
   const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
     if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       return true;
@@ -120,14 +121,16 @@ const App: React.FC = () => {
         case 'dashboard': return 'Bosh sahifa';
         case 'student-monitoring': return 'O\'quvchilar Nazorati';
         case 'settings': return 'Sozlamalar';
-        case 'buildings': return 'Binolar va Tuzilma';
+        case 'buildings': return 'Binolar va Qurilmalar';
         case 'devices': return 'Qurilmalar';
         case 'students': return 'O\'quvchilar Ro\'yxati';
         case 'classes': return 'Sinflar';
         case 'employees': return 'Xodimlar Ro\'yxati';
         case 'departments': return 'Bo\'limlar';
         case 'employee-monitoring': return 'Xodimlar Nazorati';
-        default: return 'EduControl';
+        case 'access-control': return 'Eshiklar Nazorati';
+        case 'logs': return 'Tizim Loglari';
+        default: return 'Nazorat Tizimi';
     }
   };
 
@@ -160,6 +163,10 @@ const App: React.FC = () => {
         return <DepartmentsView />;
       case 'employee-monitoring':
         return <EmployeeMonitoring />;
+      case 'access-control':
+        return <AccessControlView />;
+      case 'logs':
+        return <LogsView />;
       default:
         return <DashboardView />;
     }

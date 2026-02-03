@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Search, Plus, User, X, Save, Loader2, Upload, Camera, MoreVertical, Phone, Calendar, Building, GraduationCap, Info } from 'lucide-react';
 import { Person, School, ClassGroup } from '../types';
@@ -11,10 +12,15 @@ const flattenSchools = (nodes: School[]): School[] => {
   return flat;
 };
 
-const formatDate = (dateStr: string | null) => {
+const formatDateUz = (dateStr: string | null) => {
   if (!dateStr) return '-';
   try {
-    return new Date(dateStr).toLocaleDateString('uz-UZ');
+    const date = new Date(dateStr);
+    const monthNames = [
+      "yanvar", "fevral", "mart", "aprel", "may", "iyun",
+      "iyul", "avgust", "sentabr", "oktabr", "noyabr", "dekabr"
+    ];
+    return `${date.getDate()}-${monthNames[date.getMonth()]} ${date.getFullYear()}-yil`;
   } catch {
     return dateStr;
   }
@@ -362,7 +368,7 @@ export const StudentsView: React.FC = () => {
                         <Calendar size={14} /> Boshlanish sanasi
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        {formatDate(selectedStudentDetail.startDate)}
+                        {formatDateUz(selectedStudentDetail.startDate)}
                       </p>
                     </div>
                     <div className="space-y-1">
@@ -370,7 +376,7 @@ export const StudentsView: React.FC = () => {
                         <Calendar size={14} /> Tugash sanasi
                       </p>
                       <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        {formatDate(selectedStudentDetail.endDate)}
+                        {formatDateUz(selectedStudentDetail.endDate)}
                       </p>
                     </div>
                   </div>

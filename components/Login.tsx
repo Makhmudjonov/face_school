@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { School, ArrowRight, Lock, User, AlertCircle, WifiOff, Loader2 } from 'lucide-react';
+import { ShieldCheck, ArrowRight, Lock, User, AlertCircle, WifiOff, Loader2 } from 'lucide-react';
 
 interface LoginProps {
   onLogin: () => void;
@@ -98,10 +99,10 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
         <div className="p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-50 text-primary-600 mb-4 shadow-sm border border-primary-100">
-              <School className="w-8 h-8" />
+              <ShieldCheck className="w-8 h-8" />
             </div>
             <h2 className="text-2xl font-bold text-slate-900 tracking-tight">Xush kelibsiz</h2>
-            <p className="text-slate-500 mt-2 text-sm">Maktab elektron davomat tizimiga kirish</p>
+            <p className="text-slate-500 mt-2 text-sm">Elektron Nazorat Tizimiga kirish</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
@@ -125,7 +126,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     required
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-slate-50/50 focus:bg-white"
+                    className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-white text-slate-900"
                     placeholder="admin"
                   />
                 </div>
@@ -139,7 +140,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-slate-50/50 focus:bg-white"
+                    className="w-full pl-11 pr-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-white text-slate-900"
                     placeholder="••••••••"
                   />
                 </div>
@@ -174,7 +175,7 @@ export const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         </div>
         <div className="bg-slate-50 p-4 border-t border-slate-100 text-center">
-          <p className="text-xs text-slate-500 font-medium">EduControl &copy; 2024. Barcha huquqlar himoyalangan.</p>
+          <p className="text-xs text-slate-500 font-medium">Nazorat Tizimi &copy; 2026. Barcha huquqlar himoyalangan.</p>
         </div>
       </div>
     </div>
